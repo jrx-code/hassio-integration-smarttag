@@ -1,0 +1,68 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "SmartTag",
+        "description": "Token SmartThings jest potrzebny raz, do pobrania danych tagów (bateria, pula privacy ID). Potem obecność działa lokalnie przez Bluetooth.",
+        "data": {
+          "token_source": "Źródło tokenu",
+          "pat": "Personal Access Token (tylko dla źródła pat)"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Odnów token SmartThings",
+        "data": {
+          "pat": "Nowy Personal Access Token"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Token odrzucony",
+      "cannot_connect": "Brak połączenia z API SmartThings",
+      "no_token": "Brak tokenu. Skonfiguruj wbudowaną integrację SmartThings albo podaj PAT.",
+      "no_tags": "Na koncie nie ma żadnego SmartTaga"
+    },
+    "abort": {
+      "already_configured": "Już skonfigurowane",
+      "reauth_successful": "Token odnowiony"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "away_seconds": "Nieobecny po (sekundy bez ramki BLE)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "presence": {
+        "name": "W zasięgu"
+      }
+    },
+    "sensor": {
+      "battery": {
+        "name": "Bateria"
+      },
+      "rssi": {
+        "name": "Sygnał BLE"
+      },
+      "tag_state": {
+        "name": "Stan tagu",
+        "state": {
+          "premature_offline": "Bez właściciela (< 15 min)",
+          "offline": "Bez właściciela",
+          "overmature_offline": "Bez właściciela (> 24 h)",
+          "connected_owner": "Przy właścicielu",
+          "connected_other": "Połączony z obcym urządzeniem",
+          "connected_two": "Połączony z 2 urządzeniami"
+        }
+      },
+      "last_connected_device": {
+        "name": "Ostatnio połączony z"
+      }
+    }
+  }
+}

@@ -22,6 +22,8 @@ Stan na 30.10.2026. Każdy wniosek ma źródło na dole.
 
 Uwaga: dane z 2021 r. (Flobul) i wiki uTag. Czy w 2026 r. PAT nadal dostaje `encryptionKey`, sprawdza `tools/st_probe.py`. To pierwszy krok weryfikacji.
 
+Uwaga na PAT: od 30.12.2024 nowe PAT SmartThings są ważne tylko 24 h [S19]. Wbudowana integracja SmartThings w HA używa OAuth z odświeżaniem, a refresh token jest jednorazowy [S20], więc własna integracja może jedynie czytać jej aktualny access token, nie odświeżać go.
+
 Przyciski: `tag.tagButton` nie trafia do HA, ale w aplikacji SmartThings można przypiąć naciśnięcie/przytrzymanie tagu do wirtualnego przełącznika, a ten HA już widzi [S5][S6].
 
 ## 3. Lokalizacja GPS z chmury Samsunga (nieoficjalnie)
@@ -74,5 +76,7 @@ UWB nie jest dostępne dla HA ani ESP32 (wymaga sesji z telefonem). Z punktu wid
 - [S16] HA Community, Private BLE Device & SmartTag: https://community.home-assistant.io/t/private-ble-device-samsung-smarttag/623628
 - [S17] Bermuda wiki: https://github.com/agittins/bermuda/wiki/Supported-devices
 - [S18] uTag wiki, BLE Privacy ID: https://github.com/KieronQuinn/uTag/wiki/BLE-Privacy-ID
+- [S19] SmartThings, Changes To Personal Access Tokens: https://community.smartthings.com/t/changes-to-personal-access-tokens-pat/292019 oraz https://developer.smartthings.com/docs/getting-started/authorization-and-permissions
+- [S20] SmartThings, Token Management: https://developer.smartthings.com/docs/service-integrations/token-management
 - uTag: https://github.com/KieronQuinn/uTag
 - Dokumentacja integracji SmartThings w HA: https://www.home-assistant.io/integrations/smartthings/
