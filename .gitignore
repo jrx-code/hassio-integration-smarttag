@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+# surowe zrzuty z tools/st_probe.py --raw i wszelkie sekrety
+dumps/
+*.local.json
+.env
+secrets.yaml
