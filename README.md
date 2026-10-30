@@ -4,9 +4,8 @@ Własna integracja dla Samsung Galaxy SmartTag (gen 1, SmartTag+ i SmartTag2).
 Cel: z tagów, które we wbudowanej integracji SmartThings nie mają żadnych encji,
 zrobić w HA obecność, baterię i (opcjonalnie) położenie GPS.
 
-> Status: wczesny etap. Na `main` jest research, biblioteka (parser BLE, pula
-> privacy ID, parser API) z testami i skrypt PoC. Integracja HA powstaje na
-> gałęziach z PR.
+> Status: wersja 0.1.0, eksperymentalna. Nie sprawdzona jeszcze na prawdziwych
+> tagach (patrz Roadmapa).
 
 ## Skąd problem
 
@@ -36,6 +35,27 @@ Trzy niezależne źródła danych, każde opcjonalne:
 Przyciski tagu: obejście przez wirtualny przełącznik w aplikacji SmartThings
 (opis w RESEARCH.md).
 
+## Instalacja (HACS, repozytorium własne)
+
+1. HACS > Integracje > menu > Repozytoria niestandardowe > `https://github.com/jrx-code/hassio-integration-smarttag`, kategoria Integracja.
+2. Zainstaluj "Samsung SmartTag", zrestartuj HA.
+3. Ustawienia > Urządzenia i usługi > Dodaj integrację > Samsung SmartTag.
+4. Źródło tokenu:
+   - `smartthings` (zalecane): integracja pożycza aktualny token OAuth z wbudowanej integracji SmartThings. Tylko go czyta, nie odświeża.
+   - `pat`: Personal Access Token. Uwaga: PAT utworzone po 30.12.2024 żyją tylko 24 h. Wystarczy to do pobrania puli privacy ID (zapisywana lokalnie), potem BLE działa bez chmury, a sensory z chmury przestają się aktualizować.
+
+Potrzebny jest Bluetooth w HA: adapter albo proxy ESPHome (`bluetooth_proxy:`). Najlepiej kilka proxy w różnych pokojach.
+
+### Encje na każdy tag
+
+| Encja | Źródło | Opis |
+|---|---|---|
+| `binary_sensor.*_w_zasiegu` | BLE | widziany w ostatnich N s (domyślnie 300, zmiana w Opcjach); atrybuty: proxy, RSSI, stan, ruch |
+| `sensor.*_bateria` | BLE, inaczej chmura | 100/50/15/5 % (Samsung podaje 4 poziomy) |
+| `sensor.*_sygnal_ble` | BLE | RSSI i proxy, które złapało ramkę |
+| `sensor.*_stan_tagu` | BLE | przy właścicielu / bez właściciela / połączony z obcym |
+| `sensor.*_ostatnio_polaczony_z` | chmura | nazwa telefonu, `nearby`, czas |
+
 ## Co jest w repo
 
 | Ścieżka | Co |
@@ -43,13 +63,15 @@ Przyciski tagu: obejście przez wirtualny przełącznik w aplikacji SmartThings
 | `custom_components/smarttag/ble.py` | parser ramek FD5A |
 | `custom_components/smarttag/privacy.py` | generowanie puli privacy ID |
 | `custom_components/smarttag/cloud.py` | rozpoznawanie tagów i parsowanie `bleD2D` z API SmartThings |
+| `custom_components/smarttag/coordinator.py`, `api.py` | koordynator: chmura co 30 min, nasłuch BLE, pamięć puli |
+| `custom_components/smarttag/config_flow.py` | konfiguracja w UI, reauth, opcje |
 | `tools/st_probe.py` | PoC: co API mówi o Twoich tagach |
 | `tests/` | testy pytest |
 | `docs/RESEARCH.md` | research ze źródłami |
 
 ## Jak uruchomić PoC
 
-1. Wygeneruj PAT na https://account.smartthings.com/tokens (zakresy: urządzenia
+1. Wygeneruj PAT (ważny 24 h) na https://account.smartthings.com/tokens (zakresy: urządzenia
    `r:devices:*`, `l:devices`, aplikacje `r:installedapps`, `l:installedapps`).
 2. Na maszynie z dostępem do internetu:
 
@@ -69,11 +91,13 @@ JSON-y (katalog `dumps/` jest w `.gitignore`).
 - [x] Parser FD5A, pula privacy ID, parser `bleD2D`, testy
 - [x] PoC na PAT
 - [ ] Weryfikacja na prawdziwych tagach: czy PAT dostaje `encryptionKey`, czy ramki w stanie 4 niosą privacy ID z puli
-- [ ] Integracja HA: config flow (PAT), koordynator chmury, sensory baterii i ostatniego połączenia
-- [ ] Integracja HA: nasłuch Bluetooth, `device_tracker`/obecność per tag, RSSI, najbliższe proxy
+- [x] Integracja HA: config flow (token z integracji SmartThings albo PAT), koordynator chmury, sensory
+- [x] Integracja HA: nasłuch Bluetooth, obecność per tag, RSSI, proxy
+- [ ] `device_tracker` (home/not_home) i ewentualnie integracja z Bermuda (pokój)
 - [ ] Rozdzielenie gen 1 / gen 2 w modelu urządzenia
 - [ ] (opcja) GPS przez Samsung Find, jeśli PixelShober przestanie wystarczać
-- [ ] HACS: `hacs.json`, `manifest.json`, walidacja hassfest/HACS w CI
+- [x] HACS: `hacs.json`, `manifest.json`, walidacja hassfest/HACS w CI
+- [ ] Brands (ikona) i zgłoszenie do HACS default
 
 ## Zastrzeżenia
 

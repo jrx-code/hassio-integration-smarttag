@@ -1,0 +1,11 @@
+pytest-homeassistant-custom-component
+# zależności komponentu bluetooth (HA nie instaluje ich w trybie testowym)
+aiousbwatcher
+bleak
+bleak-retry-connector
+bluetooth-adapters
+bluetooth-auto-recovery
+bluetooth-data-tools
+dbus-fast
+habluetooth
+serialx

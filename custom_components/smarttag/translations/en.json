@@ -1,0 +1,68 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "SmartTag",
+        "description": "A SmartThings token is needed once to fetch tag data (battery, privacy ID pool). After that, presence works locally over Bluetooth.",
+        "data": {
+          "token_source": "Token source",
+          "pat": "Personal Access Token (only for source pat)"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Renew SmartThings token",
+        "data": {
+          "pat": "New Personal Access Token"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Token rejected",
+      "cannot_connect": "Cannot reach SmartThings API",
+      "no_token": "No token. Set up the built-in SmartThings integration or provide a PAT.",
+      "no_tags": "No SmartTag on this account"
+    },
+    "abort": {
+      "already_configured": "Already configured",
+      "reauth_successful": "Token renewed"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "away_seconds": "Away after (seconds without BLE frame)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "presence": {
+        "name": "In range"
+      }
+    },
+    "sensor": {
+      "battery": {
+        "name": "Battery"
+      },
+      "rssi": {
+        "name": "BLE signal"
+      },
+      "tag_state": {
+        "name": "Tag state",
+        "state": {
+          "premature_offline": "Away from owner (< 15 min)",
+          "offline": "Away from owner",
+          "overmature_offline": "Away from owner (> 24 h)",
+          "connected_owner": "With owner",
+          "connected_other": "Connected to another device",
+          "connected_two": "Connected to 2 devices"
+        }
+      },
+      "last_connected_device": {
+        "name": "Last connected to"
+      }
+    }
+  }
+}
